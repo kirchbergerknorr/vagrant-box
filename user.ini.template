@@ -1,0 +1,8 @@
+author.name = your first and last name
+author.email = your email
+
+dev.server.env = dev
+
+env.JOB_NAME = ${phing.project.name}.dev
+
+ssh.temp = ${project.basedir}/build/

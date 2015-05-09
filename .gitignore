@@ -1,0 +1,6 @@
+vendor
+.idea
+id_rsa
+id_rsa.pub
+.vagrant
+user.ini
