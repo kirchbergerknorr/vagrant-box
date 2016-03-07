@@ -66,14 +66,15 @@ sudo service mysql start
 echo "Installing PHP"
 
 apt-get -y install php5
-apt-get -y install php5-mhash php5-mcrypt php5-curl php5-cli php5-mysql php5-gd php5-intl php5-common php5-xdebug
+apt-get -y install php5-mhash php5-mcrypt php5-curl php5-cli php5-mysql php5-gd php5-intl php5-common
+# php5-xdebug
 
-echo "
-zend_extension=xdebug.so
-xdebug.remote_enable = 1
-xdebug.remote_host=10.0.2.2
-xdebug.idekey=PHPSTORM
-" > /etc/php5/mods-available/xdebug.ini
+#echo "
+#zend_extension=xdebug.so
+#xdebug.remote_enable = 1
+#xdebug.remote_host=10.0.2.2
+#xdebug.idekey=PHPSTORM
+#" > /etc/php5/mods-available/xdebug.ini
 
 cd /tmp/
 wget http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
@@ -110,15 +111,15 @@ echo "Installing Composer"
 curl -sS https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
 
-echo "Install phing-build"
+echo "Install wizard"
 
 chown -R vagrant /opt/
 
 sudo -u vagrant -H sh -c "ssh -o \"StrictHostKeyChecking no\" git@bitbucket.org"
 sudo -u vagrant -H sh -c "ssh -o \"StrictHostKeyChecking no\" git@github.com"
-sudo -u vagrant -H sh -c "cd /opt/ && git clone git@github.com:kirchbergerknorr/phing-build.git phing-build"
-sudo -u vagrant -H sh -c "cd /opt/phing-build && git checkout 2.0.x"
-sudo -u vagrant -H sh -c "cd /opt/phing-build && composer install"
+sudo -u vagrant -H sh -c "cd /opt/ && git clone git@bitbucket.org:kirchbergerknorr/wizard.git wizard"
+sudo -u vagrant -H sh -c "cd /opt/wizard && git checkout testmode"
+sudo -u vagrant -H sh -c "cd /opt/wizard && composer install"
 
 curl -o n98-magerun.phar https://raw.githubusercontent.com/netz98/n98-magerun/master/n98-magerun.phar
 sudo mv n98-magerun.phar /usr/bin/n98
@@ -128,8 +129,8 @@ echo "
 export PS1='\[\e[0;31m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[0;31m\]\D{%F %T}\n$ \[\e[m\]\[\e[0;32m\]'
 
 alias a='sudo service apache2 restart'
-alias p='/opt/phing-build/vendor/bin/phing -Dmake=/opt/phing-build/build.xml -Ddefaults=/vagrant/user.ini'
-alias pl='/opt/phing-build/vendor/bin/phing -Ddefaults=/vagrant/user.ini -f /opt/phing-build/build.xml'
+alias p='/opt/wizard/vendor/bin/phing -Dmake=/opt/wizard/build.xml -Ddefaults=/vagrant/user.ini'
+alias pl='/opt/wizard/vendor/bin/phing -Ddefaults=/vagrant/user.ini -f /opt/wizard/build.xml'
 alias l='tail -F /var/log/apache2/error.log public/var/log/*'
 alias w='cd /var/www/html/'
 alias r='rm -rf public/var/cache/'
@@ -148,5 +149,12 @@ echo "Istalling CasperJS"
 sudo apt-get -y install nodejs-legacy nodejs npm
 sudo npm install -g phantomjs
 sudo npm install -g casperjs
+
+echo "Istalling Gulp"
+
+sudo apt-get autoremove -y
+sudo apt-get install ruby
+sudo gem install compass sass
+sudo npm install -g gulp
 
 echo "vagrant-box is ready"
